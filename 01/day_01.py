@@ -78,19 +78,16 @@ def find_number(input_string):
             index_list.append(char_index)
 
     valid_digits_list = list(valid_digits.keys())
+
     for digit in valid_digits_list:
-        digit_count = 0
         start = 0
-
-        if string.find(digit) != -1:
-            index_list.append(string.find(digit))
-
-            for i in range(len(string)):
-                digit_index = string.find(digit, start)
-                if digit_index != -1:
-                    index_list.append(string.find(digit, start))
-                    start = digit_index + 1
-                    digit_count += 1
+        for i in range(len(string)):
+            digit_index = string.find(digit, start)
+            if digit_index != -1:
+                index_list.append(string.find(digit, start))
+                start = digit_index + 1
+            else:
+                pass
 
     index_list.sort()
 
