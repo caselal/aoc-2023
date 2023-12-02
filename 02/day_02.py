@@ -14,29 +14,20 @@ with open("input.txt", "r") as input:
 total_cubes = {"red": 12, "green": 13, "blue": 14}
 sum_of_game_ids = 0
 
-list_of_game_ids = []
-
-
 for game in game_records:
-    possible_sets = []
-    game_number = int(game.split(": ")[0].split(" ")[1])
-    sets = game.split(": ")[1].split("; ")
+    is_possible = True
+    game_string, sets = game.split(": ")
+    game_number = int(game_string.split(" ")[1])
 
-    for set in sets:
+    for set in sets.split("; "):
         set_cubes = set.split(", ")
-        set_length = len(set_cubes)
 
-        i = 0
-        while i < set_length:
-            if int(set_cubes[i].split(" ")[0]) <= total_cubes.get(
-                set_cubes[i].split(" ")[1]
-            ):
-                possible_sets.append(1)
-            else:
-                possible_sets.append(0)
-            i += 1
+        for cubes in set_cubes:
+            count, color = cubes.split(" ")
+            if int(count) > total_cubes.get(color):
+                is_possible = False
 
-    if all(p == 1 for p in possible_sets):
+    if is_possible:
         sum_of_game_ids += game_number
 
 print(sum_of_game_ids)
@@ -49,20 +40,15 @@ sum_of_power_sets = 0
 
 for game in game_records:
     cubes_dict = {"red": 0, "blue": 0, "green": 0}
-    game_number = int(game.split(": ")[0].split(" ")[1])
-    sets = game.split(": ")[1].split("; ")
+    game_string, sets = game.split(": ")
+    game_number = int(game_string.split(" ")[1])
 
-    for set in sets:
+    for set in sets.split("; "):
         set_cubes = set.split(", ")
-        set_length = len(set_cubes)
 
-        i = 0
-        while i < set_length:
-            if cubes_dict.get(set_cubes[i].split(" ")[1]) < int(
-                set_cubes[i].split(" ")[0]
-            ):
-                cubes_dict[set_cubes[i].split(" ")[1]] = int(set_cubes[i].split(" ")[0])
-            i += 1
+        for cubes in set_cubes:
+            count, color = cubes.split(" ")
+            cubes_dict[color] = max(cubes_dict.get(color), int(count))
 
     power = np.prod(list(cubes_dict.values()))
     sum_of_power_sets += power
