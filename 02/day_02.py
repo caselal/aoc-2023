@@ -1,5 +1,5 @@
 """
-Advent of Code - Day 2:
+Advent of Code - Day 2: Cube Conundrum
 """
 import numpy as np
 
