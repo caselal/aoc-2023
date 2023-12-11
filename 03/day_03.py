@@ -81,6 +81,18 @@ print(sum_of_all_part_numbers)
 ###########
 sum_of_all_gear_ratios = 0
 
+
+# function to identify part numbers adjacent to gear *
+def adjacent_part_numbers(line, gear, nums, nums_index):
+    part_nums = []
+    for i, num in enumerate(nums):
+        if int(gear) >= max(0, int(nums_index[i][0]) - 1) and int(gear) <= min(
+            int(nums_index[i][-1]) + 1, len(line) - 1
+        ):
+            part_nums.append(int(num))
+    return part_nums
+
+
 for line_index, line in enumerate(engine_schematic):
     gear_index = index_of_gear(line)
     nums_in_line, nums_in_line_index = track_numbers(line)
@@ -92,22 +104,18 @@ for line_index, line in enumerate(engine_schematic):
     for gear in gear_index:
         part_numbers = []
         if line_index != 0:
-            for i, num in enumerate(nums_above):
-                if int(gear) >= max(0, int(nums_above_index[i][0]) - 1) and int(
-                    gear
-                ) <= min(int(nums_above_index[i][-1]) + 1, len(line) - 1):
-                    part_numbers.append(int(num))
+            part_numbers.extend(
+                adjacent_part_numbers(line, gear, nums_above, nums_above_index)
+            )
+
         if line_index != len(engine_schematic) - 1:
-            for i, num in enumerate(nums_below):
-                if int(gear) >= max(0, int(nums_below_index[i][0]) - 1) and int(
-                    gear
-                ) <= min(int(nums_below_index[i][-1]) + 1, len(line) - 1):
-                    part_numbers.append(int(num))
-        for i, num in enumerate(nums_in_line):
-            if int(gear) >= max(0, int(nums_in_line_index[i][0]) - 1) and int(
-                gear
-            ) <= min(int(nums_in_line_index[i][-1]) + 1, len(line) - 1):
-                part_numbers.append(int(num))
+            part_numbers.extend(
+                adjacent_part_numbers(line, gear, nums_below, nums_below_index)
+            )
+
+        part_numbers.extend(
+            adjacent_part_numbers(line, gear, nums_in_line, nums_in_line_index)
+        )
 
         if len(part_numbers) == 2:
             sum_of_all_gear_ratios += part_numbers[0] * part_numbers[1]
