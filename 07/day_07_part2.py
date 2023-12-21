@@ -2,6 +2,8 @@
 Advent of Code - Day 7: Camel Cards
 """
 
+from enum import Enum
+
 ###########
 # Part Two
 ###########
@@ -25,15 +27,17 @@ card_values = {
     "2": 2,
     "J": 1,
 }
-types = {
-    "five_of_a_kind": 7,
-    "four_of_a_kind": 6,
-    "full_house": 5,
-    "three_of_a_kind": 4,
-    "two_pair": 3,
-    "one_pair": 2,
-    "high_card": 1,
-}
+
+
+class HandType(Enum):
+    FIVE_OF_A_KIND = 7
+    FOUR_OF_A_KIND = 6
+    FULL_HOUSE = 5
+    THREE_OF_A_KIND = 4
+    TWO_PAIR = 3
+    ONE_PAIR = 2
+    HIGH_CARD = 1
+
 
 all_hands = {}
 for item in puzzle_input:
@@ -48,51 +52,51 @@ for item in puzzle_input:
 
     match number_unique_cards:
         case 1:
-            hand_type, strength = "five_of_a_kind", 7
+            hand_type = HandType.FIVE_OF_A_KIND
         case 2:
             if max_count == 4:
                 if "J" in hand:
-                    hand_type, strength = "five_of_a_kind", 7
+                    hand_type = HandType.FIVE_OF_A_KIND
                 else:
-                    hand_type, strength = "four_of_a_kind", 6
+                    hand_type = HandType.FOUR_OF_A_KIND
             else:
                 if "J" in hand:
-                    hand_type, strength = "five_of_a_kind", 7
+                    hand_type = HandType.FIVE_OF_A_KIND
                 else:
-                    hand_type, strength = "full_house", 5
+                    hand_type = HandType.FULL_HOUSE
         case 3:
             if max_count == 3:
                 if "J" in hand:
-                    hand_type, strength = "four_of_a_kind", 6
+                    hand_type = HandType.FOUR_OF_A_KIND
                 else:
-                    hand_type, strength = "three_of_a_kind", 4
+                    hand_type = HandType.THREE_OF_A_KIND
             else:
                 if "J" in hand:
                     if hand.count("J") == 1:
-                        hand_type, strength = "full_house", 5
+                        hand_type = HandType.FULL_HOUSE
                     else:
-                        hand_type, strength = "four_of_a_kind", 6
+                        hand_type = HandType.FOUR_OF_A_KIND
                 else:
-                    hand_type, strength = "two_pair", 3
+                    hand_type = HandType.TWO_PAIR
         case 4:
             if "J" in hand:
-                hand_type, strength = "three_of_a_kind", 4
+                hand_type = HandType.THREE_OF_A_KIND
             else:
-                hand_type, strength = "one_pair", 2
+                hand_type = HandType.ONE_PAIR
         case _:
             if "J" in hand:
-                hand_type, strength = "one_pair", 2
+                hand_type = HandType.ONE_PAIR
             else:
-                hand_type, strength = "high_card", 1
+                hand_type = HandType.HIGH_CARD
 
-    all_hands[hand] = {"bid": bid, "hand_type": hand_type, "strength": strength}
+    all_hands[hand] = {"bid": bid, "hand_type": hand_type}
 
 
 all_hands_sorted = dict(
     sorted(
         all_hands.items(),
         key=lambda x: (
-            x[1]["strength"],
+            x[1]["hand_type"].value,
             card_values.get(x[0][0]),
             card_values.get(x[0][1]),
             card_values.get(x[0][2]),
