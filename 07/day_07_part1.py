@@ -1,6 +1,11 @@
 """
 Advent of Code - Day 7: Camel Cards
 """
+
+###########
+# Part One
+###########
+
 with open("input.txt", "r") as input:
     puzzle_input = input.read()
     puzzle_input = puzzle_input.splitlines()
@@ -62,19 +67,16 @@ for item in puzzle_input:
     all_hands[hand] = {"bid": bid, "hand_type": hand_type, "strength": strength}
 
 
-###########
-# Part One
-###########
 all_hands_sorted = dict(
     sorted(
         all_hands.items(),
         key=lambda x: (
             x[1]["strength"],
-            card_values.get(x[0][:1]),
-            card_values.get(x[0][1:2]),
-            card_values.get(x[0][2:3]),
-            card_values.get(x[0][3:4]),
-            card_values.get(x[0][4:]),
+            card_values.get(x[0][0]),
+            card_values.get(x[0][1]),
+            card_values.get(x[0][2]),
+            card_values.get(x[0][3]),
+            card_values.get(x[0][4]),
         ),
     )
 )
@@ -84,8 +86,3 @@ for i, key in enumerate(all_hands_sorted.keys()):
     total_winnings += (i + 1) * all_hands_sorted.get(key).get("bid")
 
 print(total_winnings)
-
-
-###########
-# Part Two
-###########
