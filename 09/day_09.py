@@ -21,8 +21,7 @@ def find_one_difference(input_sequence):
 # function to determine all sequences of differences, until all differences are zero
 def find_all_differences(input_sequence):
     new_sequence = input_sequence
-    all_sequences = []
-    all_sequences.append(new_sequence)
+    all_sequences = [new_sequence]
 
     while all(value == new_sequence[0] for value in new_sequence) is False:
         new_sequence = find_one_difference(new_sequence)
